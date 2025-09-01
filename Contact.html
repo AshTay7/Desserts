@@ -7,7 +7,34 @@
     <!-- Add EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <title>Contact Us - Dessert Shop</title>
-     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Additional styles for form states */
+        .success-message, .error-message {
+            display: none;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .form-loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
     <!-- Header Section -->
@@ -19,7 +46,6 @@
              <a href="Other Desserts.html">Other Desserts</a>
              <a href="New arrivals.html">New Arrivals</a>
              <a href="About us.html">About</a>
-             <a href="Recipie.html">Recipes</a>
              <a href="Contact.html">Contact</a>
         </nav>
     </header>
@@ -94,6 +120,56 @@
                 <p>Weekend: 10am - 6pm</p>
             </div>
         </div>
+        
+        <script>
+            // Initialize EmailJS with your public key
+            (function() {
+                // Replace 'YOUR_PUBLIC_KEY' with your actual EmailJS public key
+                emailjs.init("xAwUfJHXa35yW-BAV");
+            })();
+            
+            // Wait for the DOM to be   fully loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                const contactForm = document.getElementById('contactForm');
+                const successMessage = document.getElementById('successMessage');
+                const errorMessage = document.getElementById('errorMessage');
+                const submitBtn = document.getElementById('submitBtn');
+                
+                // Hide messages initially
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                // Form submission handler
+                contactForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    
+                    // Show loading state
+                    contactForm.classList.add('form-loading');
+                    submitBtn.textContent = 'Sending...';
+                    
+                    // Send form data using EmailJS
+                    emailjs.sendForm('service_66jffgy', 'template_npwkr4j', this)
+                        .then(function() {
+                            // Show success message
+                            successMessage.style.display = 'block';
+                            errorMessage.style.display = 'none';
+                            
+                            // Reset form
+                            contactForm.reset();
+                        }, function(error) {
+                            // Show error message
+                            errorMessage.style.display = 'block';
+                            successMessage.style.display = 'none';
+                            console.error('Failed to send message:', error);
+                        })
+                        .finally(function() {
+                            // Remove loading state
+                            contactForm.classList.remove('form-loading');
+                            submitBtn.textContent = 'Send Message';
+                        });
+                });
+            });
+        </script>
     </section>
 </body>
 </html>
